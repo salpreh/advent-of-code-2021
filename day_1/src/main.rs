@@ -1,11 +1,19 @@
 use std::fs::File;
 use std::io::{BufReader, prelude::*};
+use std::env;
 
 const INPUT_DATA_FILE: &str = "./resources/input_data.txt";
 const TEST_INPUT_DATA_FILE: &str = "./resources/min_input_data.txt";
 
 fn main() {
-    let sonar_data = load_data(INPUT_DATA_FILE);
+    let env_arg: Option<String> = env::args().nth(1);
+    let sonar_data = load_data(get_input_file_path(env_arg));
+
+    let depth_increase_count = single_measurement_depth_increase_count(&sonar_data);
+    println!("Number of depth increments: {}", depth_increase_count);
+}
+
+fn single_measurement_depth_increase_count(sonar_data: &Vec<i32>) -> i32 {
 
     let mut depth_increase_count = 0;
     let mut previous_measure = sonar_data[0];
@@ -17,7 +25,7 @@ fn main() {
         previous_measure = *measure;
     }
 
-    println!("Number of depth increments: {}", depth_increase_count);
+    depth_increase_count
 }
 
 fn load_data(path: &str) -> Vec<i32> {
@@ -36,4 +44,11 @@ fn load_data(path: &str) -> Vec<i32> {
     }
 
     data
+}
+
+fn get_input_file_path(env: Option<String>) -> &'static str {
+    match env {
+        Some(s) => if s == "test" {TEST_INPUT_DATA_FILE} else {INPUT_DATA_FILE},
+        _ => INPUT_DATA_FILE
+    }
 }
