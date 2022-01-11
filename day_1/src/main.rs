@@ -9,8 +9,26 @@ fn main() {
     let env_arg: Option<String> = env::args().nth(1);
     let sonar_data = load_data(get_input_file_path(env_arg));
 
-    let depth_increase_count = single_measurement_depth_increase_count(&sonar_data);
+    let depth_increase_count = windowed_measurement_depth_increase_count(&sonar_data, 3);
     println!("Number of depth increments: {}", depth_increase_count);
+}
+
+fn windowed_measurement_depth_increase_count(sonar_data: &Vec<i32>, window_size: usize) -> i32 {
+    if sonar_data.len() < window_size { return 0 }
+
+    let mut depth_increase_count = 0;
+    let mut previous_measure: i32 = sonar_data[..window_size].iter().sum();
+    let last_valid_idx = sonar_data.len() - window_size + 1;
+    for idx in 1..last_valid_idx {
+        let measure: i32 = sonar_data[idx..idx+window_size].iter().sum();
+        if measure > previous_measure {
+            depth_increase_count += 1;
+        }
+
+        previous_measure = measure;
+    }
+
+    depth_increase_count
 }
 
 fn single_measurement_depth_increase_count(sonar_data: &Vec<i32>) -> i32 {
