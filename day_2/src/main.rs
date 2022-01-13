@@ -11,7 +11,7 @@ fn main() {
     let env_arg: Option<String> = env::args().nth(1);
     let commands = load_commands_data(get_input_file_path(env_arg));
 
-    let mut submarine = submarine::Submarine::new();
+    let mut submarine = submarine::AdvancedSubmarine::new();
     for command in commands {
         submarine.process_command(command);
     }
@@ -19,6 +19,8 @@ fn main() {
     println!("Final submarine position: {}x, {}y", submarine.getPosition(), submarine.getDepth());
     println!("Depth x position: {}", submarine.getPosition() * submarine.getDepth());
 }
+
+
 
 fn load_commands_data(path: &str) -> Vec<submarine::Command> {
     let data = load_data(path);

@@ -30,3 +30,34 @@ impl Submarine {
         };
     }
 }
+
+pub struct AdvancedSubmarine {
+    position: i32,
+    depth: i32,
+    aim: i32
+}
+
+impl AdvancedSubmarine {
+    pub fn new() -> AdvancedSubmarine {
+        AdvancedSubmarine { position: 0, depth: 0, aim: 0 }
+    }
+
+    pub fn getPosition(&self) -> i32 {
+        self.position
+    }
+
+    pub fn getDepth(&self) -> i32 {
+        self.depth
+    }
+
+    pub fn process_command(&mut self, command: Command) {
+        match command {
+            Command::DOWN(a) => self.aim += a,
+            Command::UP(a) => self.aim -= a,
+            Command::FORWARD(x) => {
+                self.position += x;
+                self.depth += self.aim * x;
+            }
+        };
+    }
+}
