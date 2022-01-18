@@ -20,8 +20,6 @@ fn main() {
     println!("Depth x position: {}", submarine.getPosition() * submarine.getDepth());
 }
 
-
-
 fn load_commands_data(path: &str) -> Vec<submarine::Command> {
     let data = load_data(path);
     let mut commands: Vec<submarine::Command> = Vec::new();
