@@ -11,7 +11,7 @@ const TEST_INPUT_DATA_FILE: &str = "./resources/min_input_data.txt";
 
 fn main() {
     let env_arg: Option<String> = env::args().nth(1);
-    let report_data = load_report_data(get_input_file_path(env_arg));
+    let report_data = load_data(get_input_file_path(env_arg));
 
     let diagnostic_report = DiagnosticReport::from_data(report_data);
 
@@ -23,6 +23,7 @@ fn main() {
     );
 }
 
+#[deprecated()]
 fn load_report_data(path: &str) -> Vec<u32> {
     load_data(path).into_iter()
         .map(|i| parse_report_line(&i))
