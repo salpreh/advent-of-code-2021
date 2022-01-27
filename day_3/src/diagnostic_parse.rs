@@ -12,6 +12,8 @@ pub fn parse_report_line(data: &str) -> u32 {
 pub struct DiagnosticReport {
     gamma_rate: u32,
     epsilon_rate: u32,
+    o2_rate: u32,
+    co2_rate: u32,
     processed_lines: Vec<String>,
     proc_lines_count: u32
 }
@@ -21,6 +23,8 @@ impl DiagnosticReport {
         DiagnosticReport {
             gamma_rate: 0,
             epsilon_rate: 0,
+            o2_rate: 0,
+            co2_rate: 0,
             processed_lines: Vec::new(),
             proc_lines_count: 0
         }
@@ -44,7 +48,19 @@ impl DiagnosticReport {
     }
 
     pub fn get_power_consumption(&self) -> u32 {
-        self.gamma_rate as u32 * self.epsilon_rate as u32
+        self.gamma_rate * self.epsilon_rate
+    }
+
+    pub fn get_oxigen_rate(&self) -> u32 {
+        self.o2_rate
+    }
+
+    pub fn get_co2_rate(&self) -> u32 {
+        self.co2_rate
+    }
+
+    pub fn get_life_support_rate(&self) -> u32 {
+        self.o2_rate * self.co2_rate
     }
 
     pub fn process_line(&mut self, data: String) {
@@ -54,6 +70,73 @@ impl DiagnosticReport {
     }
 
     fn calculate_rates(&mut self) {
+        self.calculate_power_consumption_rates();
+        self.calculate_life_support_rates();
+    }
+
+    fn calculate_life_support_rates(&mut self) {
+        self.o2_rate = self.calculate_o2_rate(&self.processed_lines, 0);
+        self.co2_rate = self.calculate_co2_rate(&self.processed_lines, 0);
+    }
+
+    fn calculate_o2_rate(&self, data: &Vec<String>, mut idx: usize) -> u32 {
+        if data.len() == 0 { return 0 }
+        if data.len() == 1 { return self.binary_string_to_dec_number(&data[0]) }
+
+        let filter_val = self.get_most_common_bit_in_idx(data, idx);
+        let filtered_data = self.filter_by_idx_number(data, idx, filter_val);
+        idx += 1;
+
+        self.calculate_o2_rate(&filtered_data, idx)
+    }
+
+    fn calculate_co2_rate(&self, data: &Vec<String>, mut idx: usize) -> u32 {
+        if data.len() == 0 { return 0 }
+        if data.len() == 1 { return self.binary_string_to_dec_number(&data[0]) }
+
+        let filter_val = self.get_most_common_bit_in_idx(data, idx);
+        let filtered_data = self.filter_by_idx_number(data, idx, filter_val ^ 1);
+        idx += 1;
+
+        self.calculate_co2_rate(&filtered_data, idx)
+    }
+
+    #[deprecated]
+    fn calculate_life_support_rate(&self, data: &Vec<String>, mut idx: usize, filter_val: u32) -> u32 {
+        if data.len() == 0 { return 0 }
+        if data.len() == 1 { return self.binary_string_to_dec_number(&data[0]) }
+
+        let filtered_data = self.filter_by_idx_number(data, idx, filter_val);
+        idx += 1;
+
+        self.calculate_life_support_rate(&filtered_data, idx, filter_val)
+    }
+
+    fn filter_by_idx_number(&self, data: &Vec<String>, idx: usize, filter_val: u32) -> Vec<String> {
+        let mut filtered_data: Vec<String> = Vec::new();
+        for it in data.iter() {
+            let bit = self.get_bit_at_position(it, idx);
+            if bit == filter_val {
+                filtered_data.push(it.to_string());
+            }
+        }
+
+        filtered_data
+    }
+
+    fn get_most_common_bit_in_idx(&self, data: &Vec<String>, idx: usize) -> u32 {
+        let mut zero_count = 0;
+        for it in data.iter() {
+            let bit = self.get_bit_at_position(it, idx);
+            if bit == 0 { zero_count += 1 }
+        }
+
+        let zero_ratio = (zero_count as f64) / data.len() as f64;
+        if zero_ratio > 0.5 { 0 }
+        else { 1 }
+    }
+
+    fn calculate_power_consumption_rates(&mut self) {
         let zeroes_count = self.calculate_data_zeroes_count();
         let mut gamma_rate: u32 = 0;
         let mut epsilon_rate: u32 = 0;
@@ -94,6 +177,23 @@ impl DiagnosticReport {
             zeroes_count.extend(vec![0; *size - zeroes_count.len()]);
         }
     }
+
+    fn get_bit_at_position(&self, binary_num: &String, idx: usize) -> u32 {
+        binary_num.chars()
+            .nth(idx)
+            .unwrap()
+            .to_digit(2)
+            .unwrap()
+    }
+
+    fn binary_string_to_dec_number(&self, binary_num: &String) -> u32 {
+        let mut num = 0;
+        for (idx, c) in binary_num.chars().rev().enumerate() {
+            num += c.to_digit(2).unwrap() << idx;
+        }
+
+        num
+    }
 }
 
 #[cfg(test)]
@@ -107,6 +207,15 @@ mod tests {
         assert_eq!(diagnostic_report.get_gamma_rate(), 22);
         assert_eq!(diagnostic_report.get_epsilon_rate(), 9);
         assert_eq!(diagnostic_report.get_power_consumption(), 198);
+    }
+
+    #[test]
+    fn should_process_life_support_rates() {
+        let diagnostic_report = DiagnosticReport::from_data(get_test_report_data());
+
+        assert_eq!(diagnostic_report.get_oxigen_rate(), 23);
+        assert_eq!(diagnostic_report.get_co2_rate(), 10);
+        assert_eq!(diagnostic_report.get_life_support_rate(), 230);
     }
 
     #[test]

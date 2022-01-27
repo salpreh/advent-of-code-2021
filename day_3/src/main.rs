@@ -16,10 +16,17 @@ fn main() {
     let diagnostic_report = DiagnosticReport::from_data(report_data);
 
     println!(
-        "Gamma: {}\nEpsilon: {}\nPower consumption: {}",
+        "Gamma: {}\nEpsilon: {}\nPower consumption: {}\n",
         diagnostic_report.get_gamma_rate(),
         diagnostic_report.get_epsilon_rate(),
         diagnostic_report.get_power_consumption()
+    );
+
+    println!(
+        "O2: {}\nCO2 {}\nLife support: {}\n",
+        diagnostic_report.get_oxigen_rate(),
+        diagnostic_report.get_co2_rate(),
+        diagnostic_report.get_life_support_rate()
     );
 }
 
