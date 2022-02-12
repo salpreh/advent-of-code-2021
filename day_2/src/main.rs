@@ -16,8 +16,8 @@ fn main() {
         submarine.process_command(command);
     }
 
-    println!("Final submarine position: {}x, {}y", submarine.getPosition(), submarine.getDepth());
-    println!("Depth x position: {}", submarine.getPosition() * submarine.getDepth());
+    println!("Final submarine position: {}x, {}y", submarine.get_position(), submarine.get_depth());
+    println!("Depth x position: {}", submarine.get_position() * submarine.get_depth());
 }
 
 fn load_commands_data(path: &str) -> Vec<submarine::Command> {

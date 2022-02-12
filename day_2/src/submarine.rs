@@ -4,21 +4,23 @@ pub enum Command {
     UP(i32)
 }
 
+#[allow(dead_code)]
 pub struct Submarine {
     position: i32,
     depth: i32
 }
 
+#[allow(dead_code)]
 impl Submarine {
     pub fn new() -> Submarine {
         Submarine { position: 0, depth: 0 }
     }
 
-    pub fn getPosition(&self) -> i32 {
+    pub fn get_position(&self) -> i32 {
         self.position
     }
 
-    pub fn getDepth(&self) -> i32 {
+    pub fn get_depth(&self) -> i32 {
         self.depth
     }
 
@@ -42,11 +44,11 @@ impl AdvancedSubmarine {
         AdvancedSubmarine { position: 0, depth: 0, aim: 0 }
     }
 
-    pub fn getPosition(&self) -> i32 {
+    pub fn get_position(&self) -> i32 {
         self.position
     }
 
-    pub fn getDepth(&self) -> i32 {
+    pub fn get_depth(&self) -> i32 {
         self.depth
     }
 
