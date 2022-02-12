@@ -6,8 +6,8 @@ use std::env;
 
 use diagnostic_parse::{DiagnosticReport, parse_report_line};
 
-const INPUT_DATA_FILE: &str = "./resources/input_data.txt";
-const TEST_INPUT_DATA_FILE: &str = "./resources/min_input_data.txt";
+const INPUT_DATA_FILE: &str = "./day_3/resources/input_data.txt";
+const TEST_INPUT_DATA_FILE: &str = "./day_3/resources/min_input_data.txt";
 
 fn main() {
     let env_arg: Option<String> = env::args().nth(1);

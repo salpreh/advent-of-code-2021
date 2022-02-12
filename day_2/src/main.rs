@@ -4,8 +4,8 @@ use std::fs::File;
 use std::io::{BufReader, prelude::*, Error, ErrorKind};
 use std::env;
 
-const INPUT_DATA_FILE: &str = "./resources/input_data.txt";
-const TEST_INPUT_DATA_FILE: &str = "./resources/min_input_data.txt";
+const INPUT_DATA_FILE: &str = "./day_2/resources/input_data.txt";
+const TEST_INPUT_DATA_FILE: &str = ".day_2/resources/min_input_data.txt";
 
 fn main() {
     let env_arg: Option<String> = env::args().nth(1);
