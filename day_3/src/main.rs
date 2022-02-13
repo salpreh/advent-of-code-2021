@@ -4,12 +4,9 @@ use common::{FileConfig, get_input_file_path, load_data};
 
 use diagnostic_parse::{DiagnosticReport, parse_report_line};
 
-const INPUT_DATA_FILE: &str = "./day_3/resources/input_data.txt";
-const TEST_INPUT_DATA_FILE: &str = "./day_3/resources/min_input_data.txt";
-
 fn main() {
-    let config = FileConfig::new(INPUT_DATA_FILE, TEST_INPUT_DATA_FILE);
-    let report_data = load_data(get_input_file_path(config));
+    let config = FileConfig::default("./day_3");
+    let report_data = load_data(get_input_file_path(&config));
 
     let diagnostic_report = DiagnosticReport::from_data(report_data);
 

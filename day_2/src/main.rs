@@ -4,12 +4,9 @@ use common::{FileConfig, get_input_file_path, load_data};
 
 mod submarine;
 
-const INPUT_DATA_FILE: &str = "./day_2/resources/input_data.txt";
-const TEST_INPUT_DATA_FILE: &str = ".day_2/resources/min_input_data.txt";
-
 fn main() {
-    let config = FileConfig::new(INPUT_DATA_FILE, TEST_INPUT_DATA_FILE);
-    let commands = load_commands_data(get_input_file_path(config));
+    let config = FileConfig::default("./day_2");
+    let commands = load_commands_data(get_input_file_path(&config));
 
     let mut submarine = submarine::AdvancedSubmarine::new();
     for command in commands {
