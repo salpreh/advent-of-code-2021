@@ -1,30 +1,13 @@
 use common::{FileConfig, get_input_file_path, load_data};
-use day_4::{BingoCard, BingoMatch};
+use day_4::{BingoCard, BingoMatch, last_card_score, play_match};
 
 fn main() {
     let config = FileConfig::default("./day_4");
     let (sequence, cards) = load_bingo_data(get_input_file_path(&config));
 
     let mut bingo_match = BingoMatch::new(cards);
-
-    let mut winner: Option<&BingoCard> = None;
-    let mut last_num = 0;
-    for num in sequence {
-        winner = bingo_match.mark(num);
-        last_num = num;
-
-        if winner.is_some() { break; }
-    }
-
-    match winner {
-        Some(card) => println!(
-            "There is a winner, score: {} (unmarked: {}, last_num: {})",
-            card.sum_unmarked() * last_num,
-            card.sum_unmarked(),
-            last_num
-        ),
-        None => println!("No winner in match")
-    };
+    // play_match(sequence, &mut bingo_match);
+    last_card_score(sequence, &mut bingo_match);
 }
 
 fn load_bingo_data(path: &str) -> (Vec<u32>, Vec<BingoCard>) {
